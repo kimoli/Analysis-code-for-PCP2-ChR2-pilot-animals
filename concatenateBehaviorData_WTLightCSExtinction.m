@@ -12,14 +12,14 @@ end
 
 cd(basedir)
 %mice = dir('OK*');
-mice(1,1).name='OK202';
-mice(2,1).name='OK203';
-mice(3,1).name='OK204';
-mice(4,1).name='OK206';
-mice(5,1).name='OK207';
-mice(6,1).name='OK208';
-mice(7,1).name='OK209';
-mice(8,1).name='OK210';
+mice(1,1).name='OK001';
+mice(2,1).name='OK002';
+mice(3,1).name='OK003';
+mice(4,1).name='OK004';
+mice(5,1).name='OK005';
+mice(6,1).name='OK006';
+mice(7,1).name='OK007';
+mice(8,1).name='OK008';
 
 
 [hardware{1:8,1}] = deal('arduino');
@@ -28,7 +28,6 @@ rbdat.eyelidpos = [];
 rbdat.trialnum = [];
 rbdat.baseline = [];
 rbdat.baselineMvt = [];
-rbdat.encoder_displacement = [];
 rbdat.c_isi = [];
 rbdat.c_csnum = [];
 rbdat.c_csdur = [];
@@ -39,11 +38,7 @@ rbdat.tDay = [];
 rbdat.group = []; % 1 is experimental and 2 is control
 rbdat.date = [];
 rbdat.mouse = {};
-rbdat.laserDur = [];
-rbdat.laserDel = [];
 rbdat.eyelidposOrigNorm = [];
-rbdat.manuallyProcessed = [];
-rbdat.noCRTrialSelected = [];
 
 timeVector = [];
 
@@ -103,25 +98,11 @@ for m = 1:length(mice);
                     trialsReZeroed = trials;
                 end
                 
-                % make room in the array for 340 frames (number of frames
-                % on days that have the long laser stimulation)
-                if size(trialsReZeroed.eyelidpos,2) < 340
-                    binsToAdd = 340 - size(trialsReZeroed.eyelidpos,2);
-                    trialsReZeroed.eyelidpos = [trialsReZeroed.eyelidpos, nan(size(trialsReZeroed.eyelidpos,1),binsToAdd)];
-                    trials.eyelidpos = [trials.eyelidpos, nan(size(trialsReZeroed.eyelidpos,1),binsToAdd)];
-                end
-                
                 rbdat.eyelidpos=[rbdat.eyelidpos;trialsReZeroed.eyelidpos]; 
                 rbdat.eyelidposOrigNorm = [rbdat.eyelidposOrigNorm; trials.eyelidpos];
                 
                 temp = 1:length(trials.c_csnum);
                 rbdat.trialnum = [rbdat.trialnum;temp'];
-                
-                if noCRTrialsSelected
-                    rbdat.noCRTrialSelected = [rbdat.noCRTrialSelected; ismember(temp',markedTrials)];
-                else
-                    rbdat.noCRTrialSelected = [rbdat.noCRTrialSelected; nan(length(trials.c_csnum),1)];
-                end
                 
                 % there is something wrong with the baselinemvt
                 % computation, it isn't sensitive enough & lets some things
@@ -139,20 +120,7 @@ for m = 1:length(mice);
                 
                 rbdat.baseline = [rbdat.baseline; baselines];
                 rbdat.baselineMvt = [rbdat.baselineMvt; baselineMvt];
-               
-                if isfield(trials,'encoder_displacement')
-                    if size(trials.encoder_displacement,2) < 340
-                        binsToAdd = 340 - size(trials.encoder_displacement,2);
-                        trials.encoder_displacement = [trials.encoder_displacement, nan(size(trialsReZeroed.eyelidpos,1),binsToAdd)];
-                    end
-                    
-                    rbdat.encoder_displacement = [rbdat.encoder_displacement;trials.encoder_displacement];
-                else
-                    [rows, ~] = size(trials.eyelidpos);
-                    cols = 340; % force this to be 340
-                    rbdat.encoder_displacement = [rbdat.encoder_displacement;NaN(rows,cols,'like',rbdat.eyelidpos)];
-                end
-                
+                               
                 rbdat.c_isi = [rbdat.c_isi;trials.c_isi];
                 rbdat.c_csnum = [rbdat.c_csnum;trials.c_csnum];
                 rbdat.c_csdur = [rbdat.c_csdur;trials.c_csdur];
@@ -164,27 +132,23 @@ for m = 1:length(mice);
                 rbdat.c_usdur = [rbdat.c_usdur;trials.c_usdur];
                 rbdat.type = [rbdat.type;strcmpi(trials.type,'Conditioning')]; % for ease of use later, let 1 = conditioning trials and 0=other
                 rbdat.tDay = [rbdat.tDay;tDay*ones(length(trials.c_csnum),1)];
-                rbdat.manuallyProcessed = [rbdat.manuallyProcessed; trialsManuallyProcessed*ones(length(trials.c_csnum),1)];
                 
                 thisDate = str2double(days(d).name);
                 rbdat.date = [rbdat.date;thisDate*ones(length(trials.c_csnum),1)];
                 [rbdat.mouse{end+1:end+length(trials.c_csnum), 1}]=...
                     deal(mice(m,1).name);
                 
-                rbdat.laserDur = [rbdat.laserDur;trials.laser.dur];
-                rbdat.laserDel = [rbdat.laserDel;trials.laser.delay];
-                
-                if strcmpi(mice(m,1).name, 'OK202') ||...
-                        strcmpi(mice(m,1).name, 'OK203') ||...
-                        strcmpi(mice(m,1).name, 'OK204') ||...
-                        strcmpi(mice(m,1).name, 'OK206')
-                    % depends on not adding more animals to the groups
-                    % let group 1 be experimental and group 2 be control
+               
+                if strcmpi(mice(m,1).name, 'OK001') ||...
+                        strcmpi(mice(m,1).name, 'OK002') ||...
+                        strcmpi(mice(m,1).name, 'OK003') ||...
+                        strcmpi(mice(m,1).name, 'OK004')
+                    % dim led is group 1, bright led is group 2
                     grouptemp = 1;
-                elseif  strcmpi(mice(m,1).name, 'OK207') ||...
-                        strcmpi(mice(m,1).name, 'OK208') ||...
-                        strcmpi(mice(m,1).name, 'OK209') ||...
-                        strcmpi(mice(m,1).name, 'OK210')
+                elseif  strcmpi(mice(m,1).name, 'OK005') ||...
+                        strcmpi(mice(m,1).name, 'OK006') ||...
+                        strcmpi(mice(m,1).name, 'OK007') ||...
+                        strcmpi(mice(m,1).name, 'OK008')
                     grouptemp = 2;
                 end
                 rbdat.group = [rbdat.group; grouptemp*ones(length(trials.c_csnum),1)];
@@ -196,7 +160,7 @@ for m = 1:length(mice);
         
     end
     
-    if size(trialsReZeroed.eyelidpos,2) == 340 && isempty(timeVector)
+    if isempty(timeVector)
         timeVector = trials.tm(1,:);
     end
 end
@@ -205,8 +169,8 @@ cd(savedir)
 
 tempstr = date;
 correctFormatDate = reformatDate(tempstr);
-filename = strcat(correctFormatDate,'_PCP2ChR2PilotExpt_allAnimBehData.mat');
+filename = strcat(correctFormatDate,'_WTLEDCSUnpExt.mat');
 save(filename, 'rbdat')
 
-filename = strcat(correctFormatDate,'_PCP2ChR2PilotExpt_timeVector.mat');
+filename = strcat(correctFormatDate,'_WTLEDCSUnpExt_timeVector.mat');
 save(filename, 'timeVector')

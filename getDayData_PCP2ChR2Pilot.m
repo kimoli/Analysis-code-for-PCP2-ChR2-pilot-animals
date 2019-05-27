@@ -3,7 +3,7 @@ function [output, spontrecovdata] = getDayData_PCP2ChR2Pilot(data, timeVector, m
 mouseNames = unique(data.mouse);
 mousenum = length(mouseNames);
 
-output = setUpOutput();
+output = setUpOutput_PCP2ChR2();
 spontrecovdata = {};
  
 for m = 1:mousenum
@@ -38,7 +38,7 @@ for m = 1:mousenum
             disp('PROBLEM')
             pause
         end
-        [output, blockedCRadjamp] = pullData(data.eyelidpos, data.noCRTrialSelected(pairedTrials), data.c_usdur,...
+        [output, blockedCRadjamp] = pullData_PCP2ChR2(data.eyelidpos, data.noCRTrialSelected(pairedTrials), data.c_usdur,...
             pairedTrials, timeVector, ...
             crcrit, output, thisMouse, daylist(d));
         tempdays = ones(length(blockedCRadjamp),1)*daylist(d);

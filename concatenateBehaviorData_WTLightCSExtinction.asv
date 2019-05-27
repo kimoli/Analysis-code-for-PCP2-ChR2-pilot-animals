@@ -12,10 +12,10 @@ end
 
 cd(basedir)
 %mice = dir('OK*');
-mice(1,1).name='OK202';
-mice(2,1).name='OK203';
-mice(3,1).name='OK204';
-mice(4,1).name='OK206';
+mice(1,1).name='OK001';
+mice(2,1).name='OK002';
+mice(3,1).name='OK003';
+mice(4,1).name='OK004';
 mice(5,1).name='OK207';
 mice(6,1).name='OK208';
 mice(7,1).name='OK209';

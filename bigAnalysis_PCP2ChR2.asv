@@ -197,14 +197,14 @@ for r = 1:rows
     hold on
     colorvals = [];
     colorvals_raw = [];
-    for c = 1:cols
+    for c = 3:12
         plot(a, 1:340, output.eyelidpos.data{r,c})
         plot(b, 1:340, output.eyelidposraw.data{r,c})
         colorvals_raw = [colorvals_raw;output.eyelidposraw.data{r,c}];
         colorvals = [colorvals;output.eyelidpos.data{r,c}];
     end
-    legend(b, 'b1', 'b2', '1','2','3','4','5','6','7','8','9','10','Location','EastOutside')
-    legend(a, 'b1', 'b2', '1','2','3','4','5','6','7','8','9','10','Location','EastOutside')
+    legend(a, '1','2','3','4','5','6','7','8','9','10','Location','EastOutside')
+    legend(b, '1','2','3','4','5','6','7','8','9','10','Location','EastOutside')
     if r == 1
         mouse = 'OK202'; 
     else
@@ -214,30 +214,15 @@ for r = 1:rows
     title(b, [mouse, ': mean eyelidtrace across CS+laser+US days, raw'])
     ylim(b, [0 1])
     ylim(a, [0 1])
-    savefig([mouse, '_CSlaserUS_CStraces.fig'])
-    saveas(gcf,[mouse,'_CSlaserUS_CStraces'],'png')
+    savefig([mouse, '_unpairedExtinctionPlusLaser_CSheatmap.fig'])
+    saveas(gcf,[mouse,'_unpairedExtinctionPlusLaser_CSheatmap'],'png')
     close(gcf)
     
     figure
     subplot(1,2,1)
-    imagesc(colorvals_raw(:,1:200))
-    title([mouse, ': raw mean eyetrace on CS + laser + US days'])
-    hold on
-    plot([86 86],[0.5 14.5], 'Color', [1 1 1], 'LineStyle', ':')
-    plot([40 40],[0.5 14.5], 'Color', [1 1 1], 'LineStyle', ':')
-    xlabel('bin')
-    ylabel('Day')
+    imagesc(colorvals_raw)
     subplot(1,2,2)
-    imagesc(colorvals(:,1:200))
-    title([mouse, ': adjusted mean eyetrace on CS + laser + US days'])
-    hold on
-    plot([86 86],[0.5 14.5], 'Color', [1 1 1], 'LineStyle', ':')
-    plot([40 40],[0.5 14.5], 'Color', [1 1 1], 'LineStyle', ':')
-    xlabel('bin')
-    ylabel('Day')
-    savefig([mouse, '_CSlaserUS_heatmap.fig'])
-    saveas(gcf,[mouse,'_CSlaserUS_heatmap'],'png')
-    close(gcf)
+    
 end
 
 
